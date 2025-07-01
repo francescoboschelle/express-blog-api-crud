@@ -4,7 +4,22 @@ import posts from "../data/data.js";
 const router = e.Router();
 
 router.get("/", (req, res) => {
-  res.json(posts);
+  const tag = req.query.tag;
+
+  if (tag) {
+    const filteredPosts = posts.filter((post) => post.tags.includes(tag));
+
+    if (filteredPosts.length === 0) {
+      return res.status(404).json({
+        error: "Not Found",
+        message: "Nessun post trovato con il tag specificato",
+      });
+    } else {
+      res.json(filteredPosts);
+    }
+  } else {
+    res.json(posts);
+  }
 });
 
 router.get("/:id", (req, res) => {
