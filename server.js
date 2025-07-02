@@ -5,6 +5,7 @@ const app = e();
 const port = 3000;
 
 app.use(e.static("imgs"));
+app.use(e.json());
 app.use("/posts", postsRouter);
 
 app.get("/", (req, res) => {

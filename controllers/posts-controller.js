@@ -1,20 +1,21 @@
 import posts from "../data/data.js";
 
-export function getPostsByID(req, res) {
-  const id = parseInt(req.params.id);
-  const post = posts.find((post) => post.id === id);
-
-  if (post) {
-    res.json(post);
+function validateBody(body) {
+  if (
+    !body ||
+    !body.title ||
+    (body.title && typeof body.title !== "string") ||
+    !body.content ||
+    (body.content && typeof body.content !== "string") ||
+    (body.tags && !Array.isArray(body.tags))
+  ) {
+    return false;
   } else {
-    res.status(404).json({
-      error: "Not Found",
-      message: "Post non trovato",
-    });
+    return true;
   }
 }
 
-export function getPostsByTag(req, res) {
+export function index(req, res) {
   const tag = req.query.tag;
 
   if (tag) {
@@ -33,17 +34,104 @@ export function getPostsByTag(req, res) {
   }
 }
 
-export function deletePostByID(req, res) {
+export function show(req, res) {
   const id = parseInt(req.params.id);
   const post = posts.find((post) => post.id === id);
 
-  if (post) {
-    posts.splice(posts.indexOf(post), 1);
-    res.status(204).send();
-  } else {
-    res.status(404).json({
+  if (!post) {
+    return res.status(404).json({
       error: "Not Found",
       message: "Post non trovato",
     });
   }
+
+  res.json(post);
+}
+
+export function store(req, res) {
+  const body = req.body;
+
+  console.log("Body:", body);
+
+  if (!validateBody(body)) {
+    return res.status(400).json({
+      error: "Bad Request",
+      message: "Dati mancanti o non validi",
+    });
+  }
+
+  const newPost = {
+    id: posts[posts.length - 1].id + 1 || 1,
+    title: body.title,
+    content: body.content,
+    image: body.image || null,
+    tags: body.tags || [],
+  };
+
+  posts.push(newPost);
+  res.status(201).json(newPost);
+}
+
+export function update(req, res) {
+  const id = parseInt(req.params.id);
+  const post = posts.find((post) => post.id === id);
+
+  if (!post) {
+    return res.status(404).json({
+      error: "Not Found",
+      message: "Post non trovato",
+    });
+  }
+
+  const body = req.body;
+
+  if (!validateBody(body)) {
+    return res.status(400).json({
+      error: "Bad Request",
+      message: "Dati mancanti o non validi",
+    });
+  }
+
+  post.title = body.title;
+  post.content = body.content;
+  post.image = body.image || null;
+  post.tags = body.tags || [];
+
+  res.json(post);
+}
+
+export function modify(req, res) {
+  const id = parseInt(req.params.id);
+  const post = posts.find((post) => post.id === id);
+
+  if (!post) {
+    return res.status(404).json({
+      error: "Not Found",
+      message: "Post non trovato",
+    });
+  }
+
+  const body = req.body;
+
+  post.title = body.title || post.title;
+  post.content = body.content || post.content;
+  post.image = body.image || post.image;
+  post.tags = body.tags || post.tags;
+
+  res.json(post);
+}
+
+export function destroy(req, res) {
+  const id = parseInt(req.params.id);
+  const post = posts.find((post) => post.id === id);
+
+  if (!post) {
+    return res.status(404).json({
+      error: "Not Found",
+      message: "Post non trovato",
+    });
+  }
+
+  posts.splice(posts.indexOf(post), 1);
+  res.status(204).send();
 }

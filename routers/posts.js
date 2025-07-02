@@ -1,16 +1,25 @@
 import e from "express";
 import {
-  deletePostByID,
-  getPostsByTag,
-  getPostsByID,
+  index,
+  show,
+  store,
+  destroy,
+  update,
+  modify,
 } from "../controllers/posts-controller.js";
 
 const router = e.Router();
 
-router.get("/", getPostsByTag);
+router.get("/", index);
 
-router.get("/:id", getPostsByID);
+router.get("/:id", show);
 
-router.delete("/:id", deletePostByID);
+router.post("/", store);
+
+router.put("/:id", update);
+
+router.patch("/:id", modify);
+
+router.delete("/:id", destroy);
 
 export default router;
