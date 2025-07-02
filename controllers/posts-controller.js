@@ -15,7 +15,7 @@ function validateBody(body) {
   }
 }
 
-export function index(req, res) {
+function index(req, res) {
   const tag = req.query.tag;
 
   if (tag) {
@@ -34,7 +34,7 @@ export function index(req, res) {
   }
 }
 
-export function show(req, res) {
+function show(req, res) {
   const id = parseInt(req.params.id);
   const post = posts.find((post) => post.id === id);
 
@@ -48,7 +48,7 @@ export function show(req, res) {
   res.json(post);
 }
 
-export function store(req, res) {
+function store(req, res) {
   const body = req.body;
 
   console.log("Body:", body);
@@ -72,7 +72,7 @@ export function store(req, res) {
   res.status(201).json(newPost);
 }
 
-export function update(req, res) {
+function update(req, res) {
   const id = parseInt(req.params.id);
   const post = posts.find((post) => post.id === id);
 
@@ -100,7 +100,7 @@ export function update(req, res) {
   res.json(post);
 }
 
-export function modify(req, res) {
+function modify(req, res) {
   const id = parseInt(req.params.id);
   const post = posts.find((post) => post.id === id);
 
@@ -121,7 +121,7 @@ export function modify(req, res) {
   res.json(post);
 }
 
-export function destroy(req, res) {
+function destroy(req, res) {
   const id = parseInt(req.params.id);
   const post = posts.find((post) => post.id === id);
 
@@ -135,3 +135,12 @@ export function destroy(req, res) {
   posts.splice(posts.indexOf(post), 1);
   res.status(204).send();
 }
+
+export default {
+  index,
+  show,
+  store,
+  update,
+  modify,
+  destroy,
+};

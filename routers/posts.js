@@ -1,25 +1,18 @@
 import e from "express";
-import {
-  index,
-  show,
-  store,
-  destroy,
-  update,
-  modify,
-} from "../controllers/posts-controller.js";
+import postController from "../controllers/posts-controller.js";
 
 const router = e.Router();
 
-router.get("/", index);
+router.get("/", postController.index);
 
-router.get("/:id", show);
+router.get("/:id", postController.show);
 
-router.post("/", store);
+router.post("/", postController.store);
 
-router.put("/:id", update);
+router.put("/:id", postController.update);
 
-router.patch("/:id", modify);
+router.patch("/:id", postController.modify);
 
-router.delete("/:id", destroy);
+router.delete("/:id", postController.destroy);
 
 export default router;
